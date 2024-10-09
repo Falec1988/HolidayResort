@@ -2,26 +2,43 @@
 
 @model IEnumerable<Accommodation>
 
-<h1>Popis smještaja</h1>
+<div class="w-100 card border-0 p-4">
+    <div class="card-header bg-success bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Smještaj</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body border p-4">
+        <div class="row pb-3">
+            <div class="col-6 offset-6 text-end">
+                <a asp-controller="Accommodation" asp-action="" class="btn btn-secondary">
+                    Dodaj novi smještaj
+                </a>
+            </div>
+        </div>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Naziv</th>
-            <th>Cijena</th>
-            <th>Kvadratura</th>
-            <th>Kapacitet</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var obj in Model)
-        {
-            <tr>
-                <td>@obj.Name</td>
-                <td>@obj.Price</td>
-                <td>@obj.SquareMeter</td>
-                <td>@obj.Capacity</td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Naziv</th>
+                    <th>Cijena</th>
+                    <th>Kvadratura</th>
+                    <th>Kapacitet</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        <td>@obj.Name</td>
+                        <td>@obj.Price</td>
+                        <td>@obj.SquareMeter</td>
+                        <td>@obj.Capacity</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
