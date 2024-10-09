@@ -17,4 +17,9 @@ public class AccommodationController : Controller
         var accommodations = _context.Accommodations.ToList();
         return View(accommodations);
     }
+
+    public IActionResult Create()
+    {
+        return View();
+    }
 }
