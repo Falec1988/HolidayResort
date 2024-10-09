@@ -5,6 +5,12 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HolidayResort.Web", "HolidayResort.Web\HolidayResort.Web.csproj", "{26B47C17-76E4-4B26-BABD-79049C33C480}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HolidayResort.Domain", "HolidayResort.Domain\HolidayResort.Domain.csproj", "{238A102A-7ADD-4F90-9A90-F9FF6A12F99A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HolidayResort.Application", "HolidayResort.Application\HolidayResort.Application.csproj", "{7F0AF356-31C6-4B21-8AC5-0C11581CE4E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HolidayResort.Infrastructure", "HolidayResort.Infrastructure\HolidayResort.Infrastructure.csproj", "{CCA09697-C7F4-46A7-8A8A-1715BA2700A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{26B47C17-76E4-4B26-BABD-79049C33C480}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26B47C17-76E4-4B26-BABD-79049C33C480}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26B47C17-76E4-4B26-BABD-79049C33C480}.Release|Any CPU.Build.0 = Release|Any CPU
+		{238A102A-7ADD-4F90-9A90-F9FF6A12F99A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{238A102A-7ADD-4F90-9A90-F9FF6A12F99A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{238A102A-7ADD-4F90-9A90-F9FF6A12F99A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{238A102A-7ADD-4F90-9A90-F9FF6A12F99A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F0AF356-31C6-4B21-8AC5-0C11581CE4E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F0AF356-31C6-4B21-8AC5-0C11581CE4E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F0AF356-31C6-4B21-8AC5-0C11581CE4E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F0AF356-31C6-4B21-8AC5-0C11581CE4E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCA09697-C7F4-46A7-8A8A-1715BA2700A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCA09697-C7F4-46A7-8A8A-1715BA2700A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCA09697-C7F4-46A7-8A8A-1715BA2700A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCA09697-C7F4-46A7-8A8A-1715BA2700A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
