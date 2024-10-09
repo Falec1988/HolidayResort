@@ -1,8 +1,27 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using HolidayResort.Domain.Entities
 
+@model IEnumerable<Accommodation>
 
-<h1>Accommodation List</h1>
+<h1>Popis smještaja</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Naziv</th>
+            <th>Cijena</th>
+            <th>Kvadratura</th>
+            <th>Kapacitet</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var obj in Model)
+        {
+            <tr>
+                <td>@obj.Name</td>
+                <td>@obj.Price</td>
+                <td>@obj.SquareMeter</td>
+                <td>@obj.Capacity</td>
+            </tr>
+        }
+    </tbody>
+</table>
