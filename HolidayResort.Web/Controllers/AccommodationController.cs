@@ -15,6 +15,6 @@ public class AccommodationController : Controller
     public IActionResult Index()
     {
         var accommodations = _context.Accommodations.ToList();
-        return View();
+        return View(accommodations);
     }
 }
