@@ -18,4 +18,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HolidayResort.Domain\HolidayResort.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
