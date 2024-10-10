@@ -1,6 +1,7 @@
 ﻿using HolidayResort.Domain.Entities;
 using HolidayResort.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HolidayResort.Web.Controllers;
 
@@ -21,6 +22,14 @@ public class AccommodationNumberController : Controller
 
     public IActionResult Create()
     {
+        IEnumerable<SelectListItem> list = _context.Accommodations.ToList().Select(l => new SelectListItem
+        {
+            Text = l.Name,
+            Value = l.Id.ToString()
+        });
+
+        ViewData["AccommodationList"] = list;
+
         return View();
     }
 
