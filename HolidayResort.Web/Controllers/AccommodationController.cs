@@ -39,4 +39,14 @@ public class AccommodationController : Controller
         }
         return View();
     }
+
+    public IActionResult Update(int accommodationId)
+    {
+        Accommodation? obj = _context.Accommodations.FirstOrDefault(u => u.Id == accommodationId);
+        if (obj == null)
+        {
+            return NotFound();
+        }
+        return View(obj);
+    }
 }
