@@ -1,4 +1,5 @@
-﻿using HolidayResort.Infrastructure.Data;
+﻿using HolidayResort.Domain.Entities;
+using HolidayResort.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HolidayResort.Web.Controllers;
@@ -21,5 +22,13 @@ public class AccommodationController : Controller
     public IActionResult Create()
     {
         return View();
+    }
+
+    [HttpPost]
+    public IActionResult Create(Accommodation obj)
+    {
+        _context.Accommodations.Add(obj);
+        _context.SaveChanges();
+        return RedirectToAction("Index");
     }
 }
