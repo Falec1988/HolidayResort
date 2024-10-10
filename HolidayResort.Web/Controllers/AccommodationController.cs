@@ -29,7 +29,7 @@ public class AccommodationController : Controller
     {
         if (obj.Name == obj.Description)
         {
-            ModelState.AddModelError("Name", "Naziv i opis ne smiju imati isti tekst!");
+            ModelState.AddModelError("Name", "Naziv i Opis ne smiju imati isti tekst!");
         }
         if (ModelState.IsValid)
         {
