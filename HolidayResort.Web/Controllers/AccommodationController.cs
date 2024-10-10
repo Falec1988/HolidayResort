@@ -43,7 +43,7 @@ public class AccommodationController : Controller
     public IActionResult Update(int accommodationId)
     {
         Accommodation? obj = _context.Accommodations.FirstOrDefault(u => u.Id == accommodationId);
-        if (obj == null)
+        if (obj is null)
         {
             return RedirectToAction("Error", "Home");
         }
@@ -53,7 +53,7 @@ public class AccommodationController : Controller
     [HttpPost]
     public IActionResult Update(Accommodation obj)
     {
-        if (ModelState.IsValid)
+        if (ModelState.IsValid && obj.Id > 0)
         {
             _context.Accommodations.Update(obj);
             _context.SaveChanges();
@@ -65,22 +65,23 @@ public class AccommodationController : Controller
     public IActionResult Delete(int accommodationId)
     {
         Accommodation? obj = _context.Accommodations.FirstOrDefault(u => u.Id == accommodationId);
-        if (obj == null)
+        if (obj is null)
         {
             return RedirectToAction("Error", "Home");
         }
         return View(obj);
     }
 
-    //[HttpPost]
-    //public IActionResult Update(Accommodation obj)
-    //{
-    //    if (ModelState.IsValid)
-    //    {
-    //        _context.Accommodations.Update(obj);
-    //        _context.SaveChanges();
-    //        return RedirectToAction("Index");
-    //    }
-    //    return View();
-    //}
+    [HttpPost]
+    public IActionResult Delete(Accommodation obj)
+    {
+        Accommodation? objFromDb = _context.Accommodations.FirstOrDefault(d => d.Id == obj.Id);
+        if (objFromDb is not null)
+        {
+            _context.Accommodations.Remove(objFromDb);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        return View();
+    }
 }
