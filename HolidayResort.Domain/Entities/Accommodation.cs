@@ -7,7 +7,7 @@ public class Accommodation
     public int Id { get; set; }
 
     [MaxLength(50)]
-    [Display(Name="Naziv")]
+    [Display(Name = "Naziv")]
     public required string Name { get; set; }
 
     [Display(Name = "Opis")]

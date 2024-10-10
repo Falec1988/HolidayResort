@@ -25,17 +25,13 @@ public class AccommodationNumberController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(Accommodation obj)
+    public IActionResult Create(AccommodationNumber obj)
     {
-        if (obj.Name == obj.Description)
-        {
-            ModelState.AddModelError("Name", "Naziv i Opis ne smiju imati isti tekst!");
-        }
         if (ModelState.IsValid)
         {
-            _context.Accommodations.Add(obj);
+            _context.AccommodationNumbers.Add(obj);
             _context.SaveChanges();
-            TempData["success"] = "Smještaj je uspješno kreiran.";
+            TempData["success"] = "Broj smještaja je uspješno kreiran.";
             return RedirectToAction("Index");
         }
         return View();
