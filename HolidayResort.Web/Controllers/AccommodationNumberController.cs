@@ -1,5 +1,6 @@
 ﻿using HolidayResort.Domain.Entities;
 using HolidayResort.Infrastructure.Data;
+using HolidayResort.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -22,15 +23,15 @@ public class AccommodationNumberController : Controller
 
     public IActionResult Create()
     {
-        IEnumerable<SelectListItem> list = _context.Accommodations.ToList().Select(l => new SelectListItem
+        AccommodationNumberVM accommodationNumberVM = new()
         {
-            Text = l.Name,
-            Value = l.Id.ToString()
-        });
-
-        ViewData["AccommodationList"] = list;
-
-        return View();
+            AccommodationList = _context.Accommodations.ToList().Select(l => new SelectListItem
+            {
+                Text = l.Name,
+                Value = l.Id.ToString()
+            })
+        };
+        return View(accommodationNumberVM);
     }
 
     [HttpPost]
