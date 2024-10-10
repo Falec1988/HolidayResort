@@ -35,6 +35,7 @@ public class AccommodationController : Controller
         {
             _context.Accommodations.Add(obj);
             _context.SaveChanges();
+            TempData["success"] = "Smještaj je uspješno kreiran.";
             return RedirectToAction("Index");
         }
         return View();
@@ -57,6 +58,7 @@ public class AccommodationController : Controller
         {
             _context.Accommodations.Update(obj);
             _context.SaveChanges();
+            TempData["success"] = "Smještaj je uspješno uređen.";
             return RedirectToAction("Index");
         }
         return View();
@@ -80,8 +82,10 @@ public class AccommodationController : Controller
         {
             _context.Accommodations.Remove(objFromDb);
             _context.SaveChanges();
+            TempData["success"] = "Smještaj je uspješno izbrisan.";
             return RedirectToAction("Index");
         }
+        TempData["error"] = "Smještaj nije moguće izbrisati.";
         return View();
     }
 }
