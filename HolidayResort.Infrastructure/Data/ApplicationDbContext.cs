@@ -11,6 +11,8 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Accommodation> Accommodations { get; set; }
 
+    public DbSet<AccommodationNumber> AccommodationNumbers { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Accommodation>().HasData(
@@ -43,6 +45,53 @@ public class ApplicationDbContext : DbContext
                 SquareMeter = 60,
                 Capacity = 5,
                 ImageUrl = "https://placehold.co/600x400",
+            });
+
+        modelBuilder.Entity<AccommodationNumber>().HasData(
+            new AccommodationNumber
+            {
+                AccommodationNo = 101,
+                AccommodationId = 1,
+            },
+            new AccommodationNumber
+            {
+                AccommodationNo = 102,
+                AccommodationId = 1,
+            },
+            new AccommodationNumber
+            {
+                AccommodationNo = 103,
+                AccommodationId = 1,
+            },
+            new AccommodationNumber
+            {
+                AccommodationNo = 104,
+                AccommodationId = 1,
+            },
+            new AccommodationNumber
+            {
+                AccommodationNo = 201,
+                AccommodationId = 2,
+            },
+            new AccommodationNumber
+            {
+                AccommodationNo = 202,
+                AccommodationId = 2,
+            },
+            new AccommodationNumber
+            {
+                AccommodationNo = 203,
+                AccommodationId = 2,
+            },
+            new AccommodationNumber
+            {
+                AccommodationNo = 301,
+                AccommodationId = 3,
+            },
+            new AccommodationNumber
+            {
+                AccommodationNo = 302,
+                AccommodationId = 3,
             });
     }
 }
