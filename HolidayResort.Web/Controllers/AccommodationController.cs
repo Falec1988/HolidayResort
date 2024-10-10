@@ -49,4 +49,16 @@ public class AccommodationController : Controller
         }
         return View(obj);
     }
+
+    [HttpPost]
+    public IActionResult Update(Accommodation obj)
+    {
+        if (ModelState.IsValid)
+        {
+            _context.Accommodations.Update(obj);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        return View();
+    }
 }
