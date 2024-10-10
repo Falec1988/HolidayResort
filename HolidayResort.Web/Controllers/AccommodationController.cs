@@ -61,4 +61,26 @@ public class AccommodationController : Controller
         }
         return View();
     }
+
+    public IActionResult Delete(int accommodationId)
+    {
+        Accommodation? obj = _context.Accommodations.FirstOrDefault(u => u.Id == accommodationId);
+        if (obj == null)
+        {
+            return RedirectToAction("Error", "Home");
+        }
+        return View(obj);
+    }
+
+    //[HttpPost]
+    //public IActionResult Update(Accommodation obj)
+    //{
+    //    if (ModelState.IsValid)
+    //    {
+    //        _context.Accommodations.Update(obj);
+    //        _context.SaveChanges();
+    //        return RedirectToAction("Index");
+    //    }
+    //    return View();
+    //}
 }
