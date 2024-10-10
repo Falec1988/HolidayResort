@@ -27,6 +27,10 @@ public class AccommodationController : Controller
     [HttpPost]
     public IActionResult Create(Accommodation obj)
     {
+        if (obj.Name == obj.Description)
+        {
+            ModelState.AddModelError("Name", "Naziv i opis ne smiju imati isti tekst!");
+        }
         if (ModelState.IsValid)
         {
             _context.Accommodations.Add(obj);
