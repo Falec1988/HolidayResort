@@ -45,7 +45,7 @@ public class AccommodationController : Controller
         Accommodation? obj = _context.Accommodations.FirstOrDefault(u => u.Id == accommodationId);
         if (obj == null)
         {
-            return NotFound();
+            return RedirectToAction("Error", "Home");
         }
         return View(obj);
     }
