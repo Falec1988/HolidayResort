@@ -13,7 +13,7 @@ public class Accommodation
     [Display(Name = "Opis")]
     public string? Description { get; set; }
 
-    [Range(10,10000, ErrorMessage = "Maksimalna vrijednost 10.000!")]
+    [Range(10,10000, ErrorMessage = "Minimalna vrijednost 10, a maksimalna vrijednost 10.000!")]
     [Display(Name = "Cijena po noćenju")]
     public double Price { get; set; }
 
