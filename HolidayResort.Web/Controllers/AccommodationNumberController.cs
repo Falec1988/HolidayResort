@@ -64,14 +64,23 @@ public class AccommodationNumberController : Controller
         return View(obj);
     }
 
-    public IActionResult Update(int accommodationId)
+    public IActionResult Update(int accommodationNumberId)
     {
-        Accommodation? obj = _context.Accommodations.FirstOrDefault(x => x.Id == accommodationId);
-        if (obj is null)
+        AccommodationNumberVM accommodationNumberVM = new()
+        {
+            AccommodationList = _context.Accommodations.ToList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }),
+            AccommodationNumber = _context.AccommodationNumbers.FirstOrDefault(x => x.AccommodationNo == accommodationNumberId)
+        };
+
+        if (accommodationNumberVM.AccommodationNumber is null)
         {
             return RedirectToAction("Error", "Home");
         }
-        return View(obj);
+        return View(accommodationNumberVM);
     }
 
     [HttpPost]
