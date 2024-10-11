@@ -7,13 +7,13 @@ public interface IAccommodationRepository
 {
     IEnumerable<Accommodation> GetAll(Expression<Func<Accommodation,bool>>? filter = null, string? includeProperties = null);
 
-    IEnumerable<Accommodation> Get(Expression<Func<Accommodation, bool>>? filter, string? includeProperties = null);
+    Accommodation Get(Expression<Func<Accommodation, bool>>? filter, string? includeProperties = null);
 
-    void Create(Accommodation entity);
+    void Add(Accommodation entity);
 
     void Update(Accommodation entity);
 
-    void Delete(Accommodation entity);
+    void Remove(Accommodation entity);
 
-    void Save(Accommodation entity);
+    void SaveChanges(Accommodation entity);
 }
