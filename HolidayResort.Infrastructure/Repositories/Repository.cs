@@ -1,28 +1,67 @@
 ﻿using HolidayResort.Application.Interfaces;
-using HolidayResort.Domain.Entities;
+using HolidayResort.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace HolidayResort.Infrastructure.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
 {
+    private readonly ApplicationDbContext _context;
+
+    internal DbSet<T> dbSet;
+
+    public Repository(ApplicationDbContext context)
+    {
+        _context = context;
+        dbSet = _context.Set<T>();
+    }
+
     public void Add(T entity)
     {
-        throw new NotImplementedException();
+        dbSet.Add(entity);
     }
 
-    public T Get(Expression<Func<Accommodation, bool>>? filter, string? includeProperties = null)
+    public T Get(Expression<Func<T, bool>>? filter, string? includeProperties = null)
     {
-        throw new NotImplementedException();
+        IQueryable<T> query = dbSet;
+
+        if (filter is not null)
+        {
+            query = query.Where(filter);
+        }
+        if (!string.IsNullOrEmpty(includeProperties))
+        {
+            foreach (var includeProp in includeProperties
+                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProp);
+            }
+        }
+        return query.FirstOrDefault();
     }
 
-    public IEnumerable<T> GetAll(Expression<Func<Accommodation, bool>>? filter = null, string? includeProperties = null)
+    public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
     {
-        throw new NotImplementedException();
+        IQueryable<T> query = dbSet;
+
+        if (filter is not null)
+        {
+            query = query.Where(filter);
+        }
+        if (!string.IsNullOrEmpty(includeProperties))
+        {
+            foreach (var includeProp in includeProperties
+                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProp);
+            }
+        }
+        return query.ToList();
     }
 
     public void Remove(T entity)
     {
-        throw new NotImplementedException();
+        dbSet.Remove(entity);
     }
 }
