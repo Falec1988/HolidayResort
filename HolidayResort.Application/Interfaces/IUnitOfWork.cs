@@ -4,5 +4,7 @@ public interface IUnitOfWork
 {
     IAccommodationRepository Accommodation { get; }
 
+    IAccommodationNumberRepository AccommodationNumber { get; }
+
     void Save();
 }

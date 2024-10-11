@@ -1,4 +1,5 @@
-﻿using HolidayResort.Domain.Entities;
+﻿using HolidayResort.Application.Interfaces;
+using HolidayResort.Domain.Entities;
 using HolidayResort.Infrastructure.Data;
 using HolidayResort.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -9,16 +10,16 @@ namespace HolidayResort.Web.Controllers;
 
 public class AccommodationNumberController : Controller
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public AccommodationNumberController(ApplicationDbContext context)
+    public AccommodationNumberController(IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
 
     public IActionResult Index()
     {
-        var accommodationNumbers = _context.AccommodationNumbers.Include(x => x.Accommodation).ToList();
+        var accommodationNumbers = _unitOfWork.AccommodationNumber.GetAll(includeProperties: "Accommodation");
         return View(accommodationNumbers);
     }
 
@@ -26,7 +27,7 @@ public class AccommodationNumberController : Controller
     {
         AccommodationNumberVM accommodationNumberVM = new()
         {
-            AccommodationList = _context.Accommodations.ToList().Select(x => new SelectListItem
+            AccommodationList = _unitOfWork.Accommodation.GetAll().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
@@ -38,12 +39,12 @@ public class AccommodationNumberController : Controller
     [HttpPost]
     public IActionResult Create(AccommodationNumberVM obj)
     {
-        bool accommodationNoExists = _context.AccommodationNumbers.Any(x => x.AccommodationNo == obj.AccommodationNumber.AccommodationNo);
+        bool accommodationNoExists = _unitOfWork.AccommodationNumber.Any(x => x.AccommodationNo == obj.AccommodationNumber.AccommodationNo);
 
         if (ModelState.IsValid && !accommodationNoExists)
         {
-            _context.AccommodationNumbers.Add(obj.AccommodationNumber);
-            _context.SaveChanges();
+            _unitOfWork.AccommodationNumber.Add(obj.AccommodationNumber);
+            _unitOfWork.Save();
             TempData["success"] = "Broj smještaja je uspješno kreiran.";
             return RedirectToAction(nameof(Index));
         }
@@ -51,7 +52,7 @@ public class AccommodationNumberController : Controller
         {
             TempData["error"] = "Broj smještaja već postoji.";
         };
-        obj.AccommodationList = _context.Accommodations.ToList().Select(x => new SelectListItem
+        obj.AccommodationList = _unitOfWork.Accommodation.GetAll().Select(x => new SelectListItem
         {
             Text = x.Name,
             Value = x.Id.ToString()
@@ -63,12 +64,12 @@ public class AccommodationNumberController : Controller
     {
         AccommodationNumberVM accommodationNumberVM = new()
         {
-            AccommodationList = _context.Accommodations.ToList().Select(x => new SelectListItem
+            AccommodationList = _unitOfWork.Accommodation.GetAll().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
             }),
-            AccommodationNumber = _context.AccommodationNumbers.FirstOrDefault(x => x.AccommodationNo == accommodationNumberId)
+            AccommodationNumber = _unitOfWork.AccommodationNumber.Get(x => x.AccommodationNo == accommodationNumberId)
         };
         if (accommodationNumberVM.AccommodationNumber is null)
         {
@@ -82,12 +83,12 @@ public class AccommodationNumberController : Controller
     {
         if (ModelState.IsValid)
         {
-            _context.AccommodationNumbers.Update(accommodationNumberVM.AccommodationNumber);
-            _context.SaveChanges();
+            _unitOfWork.AccommodationNumber.Update(accommodationNumberVM.AccommodationNumber);
+            _unitOfWork.Save();
             TempData["success"] = "Broj smještaja je uspješno uređen.";
             return RedirectToAction(nameof(Index));
         }
-        accommodationNumberVM.AccommodationList = _context.Accommodations.ToList().Select(x => new SelectListItem
+        accommodationNumberVM.AccommodationList = _unitOfWork.Accommodation.GetAll().Select(x => new SelectListItem
         {
             Text = x.Name,
             Value = x.Id.ToString()
@@ -99,12 +100,12 @@ public class AccommodationNumberController : Controller
     {
         AccommodationNumberVM accommodationNumberVM = new()
         {
-            AccommodationList = _context.Accommodations.ToList().Select(x => new SelectListItem
+            AccommodationList = _unitOfWork.Accommodation.GetAll().Select(x => new SelectListItem
             {
                 Text = x.Name,
                 Value = x.Id.ToString()
             }),
-            AccommodationNumber = _context.AccommodationNumbers.FirstOrDefault(x => x.AccommodationNo == accommodationNumberId)
+            AccommodationNumber = _unitOfWork.AccommodationNumber.Get(x => x.AccommodationNo == accommodationNumberId)
         };
         if (accommodationNumberVM.AccommodationNumber is null)
         {
@@ -116,13 +117,13 @@ public class AccommodationNumberController : Controller
     [HttpPost]
     public IActionResult Delete(AccommodationNumberVM accommodationNumberVM)
     {
-        AccommodationNumber? objFromDb = _context.AccommodationNumbers
-            .FirstOrDefault(x => x.AccommodationNo == accommodationNumberVM.AccommodationNumber.AccommodationNo);
+        AccommodationNumber? objFromDb = _unitOfWork.AccommodationNumber
+            .Get(x => x.AccommodationNo == accommodationNumberVM.AccommodationNumber.AccommodationNo);
 
         if (objFromDb is not null)
         {
-            _context.AccommodationNumbers.Remove(objFromDb);
-            _context.SaveChanges();
+            _unitOfWork.AccommodationNumber.Remove(objFromDb);
+            _unitOfWork.Save();
             TempData["success"] = "Broj smještaja je uspješno izbrisan.";
             return RedirectToAction(nameof(Index));
         }
