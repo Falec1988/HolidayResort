@@ -104,23 +104,34 @@ public class AccommodationNumberController : Controller
         return View(accommodationNumberVM);
     }
 
-    public IActionResult Delete(int accommodationId)
+    public IActionResult Delete(int accommodationNumberId)
     {
-        Accommodation? obj = _context.Accommodations.FirstOrDefault(x => x.Id == accommodationId);
-        if (obj is null)
+        AccommodationNumberVM accommodationNumberVM = new()
+        {
+            AccommodationList = _context.Accommodations.ToList().Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }),
+            AccommodationNumber = _context.AccommodationNumbers.FirstOrDefault(x => x.AccommodationNo == accommodationNumberId)
+        };
+
+        if (accommodationNumberVM.AccommodationNumber is null)
         {
             return RedirectToAction("Error", "Home");
         }
-        return View(obj);
+
+        return View(accommodationNumberVM);
     }
 
     [HttpPost]
-    public IActionResult Delete(Accommodation obj)
+    public IActionResult Delete(AccommodationNumberVM accommodationNumberVM)
     {
-        Accommodation? objFromDb = _context.Accommodations.FirstOrDefault(x => x.Id == obj.Id);
+        AccommodationNumber? objFromDb = _context.AccommodationNumbers
+            .FirstOrDefault(x => x.AccommodationNo == accommodationNumberVM.AccommodationNumber.AccommodationNo);
         if (objFromDb is not null)
         {
-            _context.Accommodations.Remove(objFromDb);
+            _context.AccommodationNumbers.Remove(objFromDb);
             _context.SaveChanges();
             TempData["success"] = "Broj smještaja je uspješno izbrisan.";
             return RedirectToAction("Index");
