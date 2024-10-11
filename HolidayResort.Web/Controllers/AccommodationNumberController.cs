@@ -80,20 +80,28 @@ public class AccommodationNumberController : Controller
         {
             return RedirectToAction("Error", "Home");
         }
+
         return View(accommodationNumberVM);
     }
 
     [HttpPost]
-    public IActionResult Update(Accommodation obj)
+    public IActionResult Update(AccommodationNumberVM accommodationNumberVM)
     {
-        if (ModelState.IsValid && obj.Id > 0)
+        if (ModelState.IsValid)
         {
-            _context.Accommodations.Update(obj);
+            _context.AccommodationNumbers.Update(accommodationNumberVM.AccommodationNumber);
             _context.SaveChanges();
             TempData["success"] = "Broj smještaja je uspješno uređen.";
             return RedirectToAction("Index");
         }
-        return View();
+
+        accommodationNumberVM.AccommodationList = _context.Accommodations.ToList().Select(x => new SelectListItem
+        {
+            Text = x.Name,
+            Value = x.Id.ToString()
+        });
+
+        return View(accommodationNumberVM);
     }
 
     public IActionResult Delete(int accommodationId)

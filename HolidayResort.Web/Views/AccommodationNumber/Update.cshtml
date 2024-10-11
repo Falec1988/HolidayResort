@@ -10,6 +10,7 @@
     </div>
     <div class="card-body border p-4">
         <form method="post" class="row">
+            <input asp-for="AccommodationNumber.AccommodationNo" hidden/>
             <div class="p-3">
                 <div class="form-floating py-1 col-12">
                     <select asp-for="@Model.AccommodationNumber.AccommodationId" asp-items="@Model.AccommodationList"
@@ -20,7 +21,7 @@
                     <span asp-validation-for="AccommodationNumber.AccommodationId" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="AccommodationNumber.AccommodationNo" class="form-control border shadow" />
+                    <input asp-for="AccommodationNumber.AccommodationNo" disabled class="form-control border shadow" />
                     <label asp-for="AccommodationNumber.AccommodationNo" class="ms-2"></label>
                     <span asp-validation-for="AccommodationNumber.AccommodationNo" class="text-danger"></span>
                 </div>
