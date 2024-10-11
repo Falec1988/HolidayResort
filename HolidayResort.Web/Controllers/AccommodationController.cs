@@ -6,16 +6,16 @@ namespace HolidayResort.Web.Controllers;
 
 public class AccommodationController : Controller
 {
-    private readonly IAccommodationRepository _accommodationRepo;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public AccommodationController(IAccommodationRepository accommodationRepo)
+    public AccommodationController(IUnitOfWork unitOfWork)
     {
-        _accommodationRepo = accommodationRepo;
+        _unitOfWork = unitOfWork;
     }
 
     public IActionResult Index()
     {
-        var accommodations = _accommodationRepo.GetAll();
+        var accommodations = _unitOfWork.Accommodation.GetAll();
         return View(accommodations);
     }
 
@@ -33,8 +33,8 @@ public class AccommodationController : Controller
         }
         if (ModelState.IsValid)
         {
-            _accommodationRepo.Add(obj);
-            _accommodationRepo.Save();
+            _unitOfWork.Accommodation.Add(obj);
+            _unitOfWork.Accommodation.Save();
             TempData["success"] = "Smještaj je uspješno kreiran.";
             return RedirectToAction(nameof(Index));
         }
@@ -43,7 +43,7 @@ public class AccommodationController : Controller
 
     public IActionResult Update(int accommodationId)
     {
-        Accommodation? obj = _accommodationRepo.Get(u => u.Id == accommodationId);
+        Accommodation? obj = _unitOfWork.Accommodation.Get(u => u.Id == accommodationId);
         if (obj is null)
         {
             return RedirectToAction("Error", "Home");
@@ -56,8 +56,8 @@ public class AccommodationController : Controller
     {
         if (ModelState.IsValid && obj.Id > 0)
         {
-            _accommodationRepo.Update(obj);
-            _accommodationRepo.Save();
+            _unitOfWork.Accommodation.Update(obj);
+            _unitOfWork.Accommodation.Save();
             TempData["success"] = "Smještaj je uspješno uređen.";
             return RedirectToAction(nameof(Index));
         }
@@ -66,7 +66,7 @@ public class AccommodationController : Controller
 
     public IActionResult Delete(int accommodationId)
     {
-        Accommodation? obj = _accommodationRepo.Get(u => u.Id == accommodationId);
+        Accommodation? obj = _unitOfWork.Accommodation.Get(u => u.Id == accommodationId);
         if (obj is null)
         {
             return RedirectToAction("Error", "Home");
@@ -77,11 +77,11 @@ public class AccommodationController : Controller
     [HttpPost]
     public IActionResult Delete(Accommodation obj)
     {
-        Accommodation? objFromDb = _accommodationRepo.Get(d => d.Id == obj.Id);
+        Accommodation? objFromDb = _unitOfWork.Accommodation.Get(d => d.Id == obj.Id);
         if (objFromDb is not null)
         {
-            _accommodationRepo.Remove(objFromDb);
-            _accommodationRepo.Save();
+            _unitOfWork.Accommodation.Remove(objFromDb);
+            _unitOfWork.Accommodation.Save();
             TempData["success"] = "Smještaj je uspješno izbrisan.";
             return RedirectToAction(nameof(Index));
         }
