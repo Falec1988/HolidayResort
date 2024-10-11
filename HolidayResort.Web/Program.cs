@@ -1,4 +1,6 @@
+using HolidayResort.Application.Interfaces;
 using HolidayResort.Infrastructure.Data;
+using HolidayResort.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,8 @@ builder.Services.AddControllersWithViews();
 // Register Application DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(option =>
 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IAccommodationRepository, AccommodationRepository>();
 
 var app = builder.Build();
 
