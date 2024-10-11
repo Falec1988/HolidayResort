@@ -3,6 +3,7 @@ using HolidayResort.Infrastructure.Data;
 using HolidayResort.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace HolidayResort.Web.Controllers;
 
@@ -17,7 +18,7 @@ public class AccommodationNumberController : Controller
 
     public IActionResult Index()
     {
-        var accommodationNumbers = _context.AccommodationNumbers.ToList();
+        var accommodationNumbers = _context.AccommodationNumbers.Include(x => x.Accommodation).ToList();
         return View(accommodationNumbers);
     }
 
