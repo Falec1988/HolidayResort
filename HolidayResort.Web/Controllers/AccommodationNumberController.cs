@@ -26,31 +26,47 @@ public class AccommodationNumberController : Controller
     {
         AccommodationNumberVM accommodationNumberVM = new()
         {
-            AccommodationList = _context.Accommodations.ToList().Select(l => new SelectListItem
+            AccommodationList = _context.Accommodations.ToList().Select(x => new SelectListItem
             {
-                Text = l.Name,
-                Value = l.Id.ToString()
+                Text = x.Name,
+                Value = x.Id.ToString()
             })
         };
         return View(accommodationNumberVM);
     }
 
     [HttpPost]
-    public IActionResult Create(AccommodationNumber obj)
+    public IActionResult Create(AccommodationNumberVM obj)
     {
-        if (ModelState.IsValid)
+        bool accommodationNoExists = _context.AccommodationNumbers.Any(x => x.AccommodationNo == obj.AccommodationNumber.AccommodationNo);
+
+
+
+        if (ModelState.IsValid && !accommodationNoExists)
         {
-            _context.AccommodationNumbers.Add(obj);
+            _context.AccommodationNumbers.Add(obj.AccommodationNumber);
             _context.SaveChanges();
             TempData["success"] = "Broj smještaja je uspješno kreiran.";
             return RedirectToAction("Index");
         }
-        return View();
+
+        if (accommodationNoExists)
+        {
+            TempData["error"] = "Broj smještaja već postoji.";
+        };
+
+        obj.AccommodationList = _context.Accommodations.ToList().Select(x => new SelectListItem
+        {
+            Text = x.Name,
+            Value = x.Id.ToString()
+        });
+
+        return View(obj);
     }
 
     public IActionResult Update(int accommodationId)
     {
-        Accommodation? obj = _context.Accommodations.FirstOrDefault(u => u.Id == accommodationId);
+        Accommodation? obj = _context.Accommodations.FirstOrDefault(x => x.Id == accommodationId);
         if (obj is null)
         {
             return RedirectToAction("Error", "Home");
@@ -65,7 +81,7 @@ public class AccommodationNumberController : Controller
         {
             _context.Accommodations.Update(obj);
             _context.SaveChanges();
-            TempData["success"] = "Smještaj je uspješno uređen.";
+            TempData["success"] = "Broj smještaja je uspješno uređen.";
             return RedirectToAction("Index");
         }
         return View();
@@ -73,7 +89,7 @@ public class AccommodationNumberController : Controller
 
     public IActionResult Delete(int accommodationId)
     {
-        Accommodation? obj = _context.Accommodations.FirstOrDefault(u => u.Id == accommodationId);
+        Accommodation? obj = _context.Accommodations.FirstOrDefault(x => x.Id == accommodationId);
         if (obj is null)
         {
             return RedirectToAction("Error", "Home");
@@ -84,15 +100,15 @@ public class AccommodationNumberController : Controller
     [HttpPost]
     public IActionResult Delete(Accommodation obj)
     {
-        Accommodation? objFromDb = _context.Accommodations.FirstOrDefault(d => d.Id == obj.Id);
+        Accommodation? objFromDb = _context.Accommodations.FirstOrDefault(x => x.Id == obj.Id);
         if (objFromDb is not null)
         {
             _context.Accommodations.Remove(objFromDb);
             _context.SaveChanges();
-            TempData["success"] = "Smještaj je uspješno izbrisan.";
+            TempData["success"] = "Broj smještaja je uspješno izbrisan.";
             return RedirectToAction("Index");
         }
-        TempData["error"] = "Smještaj nije moguće izbrisati.";
+        TempData["error"] = "Broj smještaja nije moguće izbrisati.";
         return View();
     }
 }
