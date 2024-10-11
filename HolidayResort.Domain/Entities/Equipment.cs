@@ -1,14 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace HolidayResort.Domain.Entities;
 
-public class AccommodationNumber
+public class Equipment
 {
-    [Display(Name = "Broj smještaja")]
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
-    public int AccommodationNo { get; set; }
+    [Key]
+    public int Id { get; set; }
+
+    [Display(Name = "Naziv")]
+    public required string Name { get; set; }
+
+    [Display(Name = "Opis")]
+    public string? Description { get; set; }
 
     [Display(Name = "Naziv smještaja")]
     [ForeignKey("Accommodation")]
@@ -16,7 +21,4 @@ public class AccommodationNumber
 
     [ValidateNever]
     public Accommodation Accommodation { get; set; }
-
-    [Display(Name = "Detalji")]
-    public string? SpecialDetails { get; set; }
 }

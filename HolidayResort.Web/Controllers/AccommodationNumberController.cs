@@ -1,10 +1,8 @@
 ﻿using HolidayResort.Application.Interfaces;
 using HolidayResort.Domain.Entities;
-using HolidayResort.Infrastructure.Data;
 using HolidayResort.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace HolidayResort.Web.Controllers;
 

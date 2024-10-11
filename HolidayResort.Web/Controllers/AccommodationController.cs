@@ -1,7 +1,6 @@
 ﻿using HolidayResort.Application.Interfaces;
 using HolidayResort.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 
 namespace HolidayResort.Web.Controllers;
 

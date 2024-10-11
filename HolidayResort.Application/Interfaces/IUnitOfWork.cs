@@ -6,5 +6,7 @@ public interface IUnitOfWork
 
     IAccommodationNumberRepository AccommodationNumber { get; }
 
+    IEquipmentRepository Equipment { get; }
+
     void Save();
 }

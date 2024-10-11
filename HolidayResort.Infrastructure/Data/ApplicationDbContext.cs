@@ -13,6 +13,8 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<AccommodationNumber> AccommodationNumbers { get; set; }
 
+    public DbSet<Equipment> Equipments { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Accommodation>().HasData(
@@ -92,6 +94,64 @@ public class ApplicationDbContext : DbContext
             {
                 AccommodationNo = 302,
                 AccommodationId = 3,
+            });
+
+        modelBuilder.Entity<Equipment>().HasData(
+            new Equipment
+            {
+                Id = 1,
+                AccommodationId = 1,
+                Name = "Bračni krevet"
+            },
+            new Equipment
+            {
+                Id = 2,
+                AccommodationId = 1,
+                Name = "Sef"
+            },
+            new Equipment
+            {
+                Id = 3,
+                AccommodationId = 1,
+                Name = "Fen"
+            },
+
+            new Equipment
+            {
+                Id = 4,
+                AccommodationId = 2,
+                Name = "Bračni krevet i sofa na razvlačenje"
+            },
+            new Equipment
+            {
+                Id = 5,
+                AccommodationId = 2,
+                Name = "Minibar"
+            },
+            new Equipment
+            {
+                Id = 6,
+                AccommodationId = 2,
+                Name = "Klima uređaj"
+            },
+
+            new Equipment
+            {
+                Id = 7,
+                AccommodationId = 3,
+                Name = "Bračni krevet, sofa i kauč na razvlačenje"
+            },
+            new Equipment
+            {
+                Id = 8,
+                AccommodationId = 3,
+                Name = "Perilica za pranje suđa"
+            },
+            new Equipment
+            {
+                Id = 9,
+                AccommodationId = 3,
+                Name = "Kuhinja"
             });
     }
 }

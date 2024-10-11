@@ -1,10 +1,10 @@
-﻿@model AccommodationNumberVM
+﻿@model EquipmentVM
 
 <div class="w-100 card border-0 p-4">
     <div class="card-header bg-success bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">Kreiraj novi broj smještaja</h2>
+                <h2 class="text-white py-2">Kreiraj novu opremu</h2>
             </div>
         </div>
     </div>
@@ -12,22 +12,22 @@
         <form method="post" class="row">
             <div class="p-3">
                 <div class="form-floating py-1 col-12">
-                    <select asp-for="@Model.AccommodationNumber.AccommodationId" asp-items="@Model.AccommodationList"
-                            class="form-select border shadow">
+                    <select asp-for="@Model.Equipment.AccommodationId" asp-items="@Model.AccommodationList"
+                        class="form-select border shadow">
                         <option disabled selected>--Odaberi smještaj--</option>
                     </select>
-                    <label asp-for="AccommodationNumber.AccommodationId" class="ms-2"></label>
-                    <span asp-validation-for="AccommodationNumber.AccommodationId" class="text-danger"></span>
+                    <label asp-for="Equipment.Id" class="ms-2"></label>
+                    <span asp-validation-for="Equipment.Id" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="AccommodationNumber.AccommodationNo" class="form-control border shadow" />
-                    <label asp-for="AccommodationNumber.AccommodationNo" class="ms-2"></label>
-                    <span asp-validation-for="AccommodationNumber.AccommodationNo" class="text-danger"></span>
+                    <input asp-for="Equipment.Name" class="form-control border shadow" />
+                    <label asp-for="Equipment.Name" class="ms-2"></label>
+                    <span asp-validation-for="Equipment.Name" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-1 col-12">
-                    <input asp-for="AccommodationNumber.SpecialDetails" class="form-control border shadow" />
-                    <label asp-for="AccommodationNumber.SpecialDetails" class="ms-2"></label>
-                    <span asp-validation-for="AccommodationNumber.SpecialDetails" class="text-danger"></span>
+                    <input asp-for="Equipment.Description" class="form-control border shadow" />
+                    <label asp-for="Equipment.Description" class="ms-2"></label>
+                    <span asp-validation-for="Equipment.Description" class="text-danger"></span>
                 </div>
                 <div class="row pt-2">
                     <div class="col-6 col-md-3">
@@ -36,7 +36,7 @@
                         </button>
                     </div>
                     <div class="col-6 col-md-3">
-                        <a asp-controller="AccommodationNumber" asp-action="Index" class="btn btn-secondary w-100">
+                        <a asp-controller="Equipment" asp-action="Index" class="btn btn-secondary w-100">
                             <i class="bi bi-x-circle"></i> Otkaži
                         </a>
                     </div>
