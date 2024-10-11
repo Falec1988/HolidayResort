@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HolidayResort.Domain.Entities;
 
@@ -26,6 +28,9 @@ public class Accommodation
 
     [Display(Name = "Slika")]
     public string? ImageUrl { get; set; }
+
+    [NotMapped]
+    public IFormFile? Image { get; set; }
 
     public DateTime CreatedDate { get; set;}
 

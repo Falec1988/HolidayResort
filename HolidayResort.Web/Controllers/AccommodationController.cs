@@ -1,6 +1,7 @@
 ﻿using HolidayResort.Application.Interfaces;
 using HolidayResort.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace HolidayResort.Web.Controllers;
 
@@ -8,9 +9,12 @@ public class AccommodationController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public AccommodationController(IUnitOfWork unitOfWork)
+    private readonly IWebHostEnvironment _webHostEnvironment;
+
+    public AccommodationController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
     {
         _unitOfWork = unitOfWork;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     public IActionResult Index()
@@ -33,6 +37,21 @@ public class AccommodationController : Controller
         }
         if (ModelState.IsValid)
         {
+            if (obj.Image is not null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(obj.Image.FileName);
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, @"images\AccommodationImage");
+
+                using var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create);
+                obj.Image.CopyTo(fileStream);
+
+                obj.ImageUrl = @"\images\AccommodationImage\" + fileName;
+            }
+            else
+            {
+                obj.ImageUrl = "https://placehold.co/600x400";
+            }
+
             _unitOfWork.Accommodation.Add(obj);
             _unitOfWork.Save();
             TempData["success"] = "Smještaj je uspješno kreiran.";
@@ -56,6 +75,27 @@ public class AccommodationController : Controller
     {
         if (ModelState.IsValid && obj.Id > 0)
         {
+            if (obj.Image is not null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(obj.Image.FileName);
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, @"images\AccommodationImage");
+
+                if (!string.IsNullOrEmpty(obj.ImageUrl))
+                {
+                    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath,obj.ImageUrl.TrimStart('\\'));
+
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                using var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create);
+                obj.Image.CopyTo(fileStream);
+
+                obj.ImageUrl = @"\images\AccommodationImage\" + fileName;
+            }
+
             _unitOfWork.Accommodation.Update(obj);
             _unitOfWork.Save();
             TempData["success"] = "Smještaj je uspješno uređen.";
@@ -80,6 +120,16 @@ public class AccommodationController : Controller
         Accommodation? objFromDb = _unitOfWork.Accommodation.Get(d => d.Id == obj.Id);
         if (objFromDb is not null)
         {
+            if (!string.IsNullOrEmpty(objFromDb.ImageUrl))
+            {
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, objFromDb.ImageUrl.TrimStart('\\'));
+
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+
             _unitOfWork.Accommodation.Remove(objFromDb);
             _unitOfWork.Save();
             TempData["success"] = "Smještaj je uspješno izbrisan.";
