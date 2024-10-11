@@ -13,11 +13,6 @@ public class AccommodationRepository : Repository<Accommodation>, IAccommodation
         _context = context;
     }
 
-    public void Save()
-    {
-        _context.SaveChanges();
-    }
-
     public void Update(Accommodation entity)
     {
         _context.Accommodations.Update(entity);

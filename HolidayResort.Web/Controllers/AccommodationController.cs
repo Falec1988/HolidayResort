@@ -34,7 +34,7 @@ public class AccommodationController : Controller
         if (ModelState.IsValid)
         {
             _unitOfWork.Accommodation.Add(obj);
-            _unitOfWork.Accommodation.Save();
+            _unitOfWork.Save();
             TempData["success"] = "Smještaj je uspješno kreiran.";
             return RedirectToAction(nameof(Index));
         }
@@ -57,7 +57,7 @@ public class AccommodationController : Controller
         if (ModelState.IsValid && obj.Id > 0)
         {
             _unitOfWork.Accommodation.Update(obj);
-            _unitOfWork.Accommodation.Save();
+            _unitOfWork.Save();
             TempData["success"] = "Smještaj je uspješno uređen.";
             return RedirectToAction(nameof(Index));
         }
@@ -81,7 +81,7 @@ public class AccommodationController : Controller
         if (objFromDb is not null)
         {
             _unitOfWork.Accommodation.Remove(objFromDb);
-            _unitOfWork.Accommodation.Save();
+            _unitOfWork.Save();
             TempData["success"] = "Smještaj je uspješno izbrisan.";
             return RedirectToAction(nameof(Index));
         }

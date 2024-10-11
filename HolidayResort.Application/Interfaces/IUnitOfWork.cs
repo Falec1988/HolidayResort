@@ -3,4 +3,6 @@
 public interface IUnitOfWork
 {
     IAccommodationRepository Accommodation { get; }
+
+    void Save();
 }

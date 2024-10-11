@@ -14,4 +14,9 @@ public class UnitOfWork : IUnitOfWork
         _context = context;
         Accommodation = new AccommodationRepository(_context);
     }
+
+    public void Save()
+    {
+        _context.SaveChanges();
+    }
 }
