@@ -1,21 +1,21 @@
-﻿using HolidayResort.Domain.Entities;
-using HolidayResort.Infrastructure.Data;
+﻿using HolidayResort.Application.Interfaces;
+using HolidayResort.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HolidayResort.Web.Controllers;
 
 public class AccommodationController : Controller
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IAccommodationRepository _accommodationRepo;
 
-    public AccommodationController(ApplicationDbContext context)
+    public AccommodationController(IAccommodationRepository accommodationRepo)
     {
-        _context = context;
+        _accommodationRepo = accommodationRepo;
     }
 
     public IActionResult Index()
     {
-        var accommodations = _context.Accommodations.ToList();
+        var accommodations = _accommodationRepo.GetAll();
         return View(accommodations);
     }
 
@@ -33,8 +33,8 @@ public class AccommodationController : Controller
         }
         if (ModelState.IsValid)
         {
-            _context.Accommodations.Add(obj);
-            _context.SaveChanges();
+            _accommodationRepo.Add(obj);
+            _accommodationRepo.Save();
             TempData["success"] = "Smještaj je uspješno kreiran.";
             return RedirectToAction(nameof(Index));
         }
@@ -43,7 +43,7 @@ public class AccommodationController : Controller
 
     public IActionResult Update(int accommodationId)
     {
-        Accommodation? obj = _context.Accommodations.FirstOrDefault(u => u.Id == accommodationId);
+        Accommodation? obj = _accommodationRepo.Get(u => u.Id == accommodationId);
         if (obj is null)
         {
             return RedirectToAction("Error", "Home");
@@ -56,8 +56,8 @@ public class AccommodationController : Controller
     {
         if (ModelState.IsValid && obj.Id > 0)
         {
-            _context.Accommodations.Update(obj);
-            _context.SaveChanges();
+            _accommodationRepo.Update(obj);
+            _accommodationRepo.Save();
             TempData["success"] = "Smještaj je uspješno uređen.";
             return RedirectToAction(nameof(Index));
         }
@@ -66,7 +66,7 @@ public class AccommodationController : Controller
 
     public IActionResult Delete(int accommodationId)
     {
-        Accommodation? obj = _context.Accommodations.FirstOrDefault(u => u.Id == accommodationId);
+        Accommodation? obj = _accommodationRepo.Get(u => u.Id == accommodationId);
         if (obj is null)
         {
             return RedirectToAction("Error", "Home");
@@ -77,11 +77,11 @@ public class AccommodationController : Controller
     [HttpPost]
     public IActionResult Delete(Accommodation obj)
     {
-        Accommodation? objFromDb = _context.Accommodations.FirstOrDefault(d => d.Id == obj.Id);
+        Accommodation? objFromDb = _accommodationRepo.Get(d => d.Id == obj.Id);
         if (objFromDb is not null)
         {
-            _context.Accommodations.Remove(objFromDb);
-            _context.SaveChanges();
+            _accommodationRepo.Remove(objFromDb);
+            _accommodationRepo.Save();
             TempData["success"] = "Smještaj je uspješno izbrisan.";
             return RedirectToAction(nameof(Index));
         }

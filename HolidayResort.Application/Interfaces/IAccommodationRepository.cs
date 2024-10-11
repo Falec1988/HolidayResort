@@ -15,5 +15,5 @@ public interface IAccommodationRepository
 
     void Remove(Accommodation entity);
 
-    void SaveChanges(Accommodation entity);
+    void Save();
 }

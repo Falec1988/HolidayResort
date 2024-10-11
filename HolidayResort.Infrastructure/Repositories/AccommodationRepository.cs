@@ -6,9 +6,14 @@ using System.Linq.Expressions;
 
 namespace HolidayResort.Infrastructure.Repositories;
 
-public class AccommodationRepository(ApplicationDbContext context) : IAccommodationRepository
+public class AccommodationRepository : IAccommodationRepository
 {
     private readonly ApplicationDbContext _context;
+
+    public AccommodationRepository(ApplicationDbContext context)
+    {
+        _context = context;
+    }
 
     public void Add(Accommodation entity)
     {
@@ -58,7 +63,7 @@ public class AccommodationRepository(ApplicationDbContext context) : IAccommodat
         return query.ToList();
     }
 
-    public void SaveChanges(Accommodation entity)
+    public void Save()
     {
         _context.SaveChanges();
     }
