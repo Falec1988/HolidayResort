@@ -1,19 +1,27 @@
+using HolidayResort.Application.Interfaces;
+using HolidayResort.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HolidayResort.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IUnitOfWork unitOfWork)
         {
-            _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            return View();
+            HomeVM homeVM = new()
+            {
+                AccommodationList = _unitOfWork.Accommodation.GetAll(includeProperties: "AccommodationEquipment"),
+                Nights = 1,
+                CheckInDate = DateOnly.FromDateTime(DateTime.Now)
+            };
+            return View(homeVM);
         }
 
         public IActionResult Privacy()
