@@ -1,11 +1,14 @@
 ﻿using HolidayResort.Application.Interfaces;
+using HolidayResort.Application.Utility;
 using HolidayResort.Domain.Entities;
 using HolidayResort.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HolidayResort.Web.Controllers;
 
+[Authorize(Roles = SD.Role_Admin)]
 public class EquipmentController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;

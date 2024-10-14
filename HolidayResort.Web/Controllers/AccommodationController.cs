@@ -1,9 +1,11 @@
 ﻿using HolidayResort.Application.Interfaces;
 using HolidayResort.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HolidayResort.Web.Controllers;
 
+[Authorize]
 public class AccommodationController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
