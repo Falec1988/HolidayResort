@@ -24,6 +24,42 @@ namespace HolidayResort.Web.Controllers
             return View(homeVM);
         }
 
+        [HttpPost]
+        public IActionResult Index(HomeVM homeVM)
+        {
+            homeVM.AccommodationList = _unitOfWork.Accommodation.GetAll(includeProperties: "AccommodationEquipment");
+
+            foreach (var accommodation in homeVM.AccommodationList)
+            {
+                if (accommodation.Id % 2 == 0)
+                {
+                    accommodation.IsAvailable = false;
+                }
+            }
+            return View(homeVM);
+        }
+
+        public IActionResult GetAccommodationsByDate(int nights, DateOnly checkInDate)
+        {
+            var accommodationList = _unitOfWork.Accommodation.GetAll(includeProperties: "AccommodationEquipment").ToList();
+
+            foreach (var accommodation in accommodationList)
+            {
+                if (accommodation.Id % 2 == 0)
+                {
+                    accommodation.IsAvailable = false;
+                }
+            }
+            HomeVM homeVM = new()
+            {
+                CheckInDate = checkInDate,
+                AccommodationList = accommodationList,
+                Nights = nights
+            };
+
+            return PartialView("_AccommodationList", homeVM);
+        }
+
         public IActionResult Privacy()
         {
             return View();

@@ -39,4 +39,7 @@ public class Accommodation
 
     [ValidateNever]
     public IEnumerable<Equipment>? AccommodationEquipment { get; set; }
+
+    [NotMapped]
+    public bool IsAvailable { get; set; } = true;
 }

@@ -26,7 +26,7 @@
         </button>
     </div>
 
-    <form method="post" style="background-color:black">
+    <form method="post" style="background-color:black" asp-action="GetAccommodationsByDate">
         <div class="row p-0 mx-0 py-4">
             <div class="col-12 col-md-5  offset-md-1 pl-2  pr-2 pr-md-0">
                 <div class="form-group">
@@ -37,7 +37,7 @@
             <div class="col-8 col-md-3 pl-2 pr-2">
                 <div class="form-group">
                     <label>Broj noćenja</label>
-                    <select class="form-select">
+                    <select class="form-select" asp-for="Nights">
                         @for (var i = 1; i < 11; i++)
                         {
                             <option value="@i">@i</option>
@@ -47,75 +47,33 @@
             </div>
             <div class="col-4 col-md-2 pt-4 pr-2">
                 <div class="form-group">
-                    <button type="button" class="btn btn-success btn-block">
+                    <button type="button" onclick="fnLoadAccommodationList" class="btn btn-success btn-block">
                         <i class="bi bi-search"></i>  &nbsp; Pregledaj dostupnost
                     </button>
                 </div>
             </div>
         </div>
-        <div id="VillasList">
-            <div class="row px-lg-5 m-lg-4 m-sm-0 px-sm-0" style="--bs-gutter-x:0">
-                @foreach (var accommodation in Model.AccommodationList)
-                {
-                <div class="p-4 col-md-12 col-lg-6">
-                    <div class="row" style="border-radius:5px; border: 1px solid #aaa">
-                        <div class="col-4 p-2">
-                            <img class="d-block w-100" style="border-radius:5px;" src="@accommodation.ImageUrl">
-                        </div>
-                        <div class="col-8">
-                            <div class="d-flex justify-content-between">
-                                <p class="card-title text-warning" style="font-size:xx-large">@accommodation.Name</p>
-                                <div class="pt-2">
-                                    <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target='#exampleModal-@(accommodation.Id)'>
-                                        Detalji
-                                    </button>
-                                </div>
-                            </div>
-                            <p class="card-text">
-                                @Html.Raw(accommodation.Description)
-                            </p>
-                        </div>
-                        <div class="col-12">
-                            <div class="row pb-3 pt-2">
-                                <div class="col-4">
-                                    <a class="btn btn-success form-control btn-block">
-                                        Rezerviraj
-                                    </a>
-                                </div>
-                                <div class="col-4">
-                                    <span class="">Kapacitet : @accommodation.Capacity</span><br />
-                                    <span class=" pt-1">Kvadratura : @accommodation.SquareMeter m²</span><br />
-                                </div>
-                                <div class="col-4">
-                                    <span class="text-warning float-end font-weight-bold pt-1" style="font-size:25px;">
-                                        <span style="border-bottom:1px solid #ff6a00">
-                                                @accommodation.Price.ToString("C", CultureInfo.CreateSpecificCulture("fr-FR"))
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal fade" id="exampleModal-@(accommodation.Id)" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl" style="border: 1px solid #aaa; border-radius:7px;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-3 text-success" id="exampleModalLabel"></h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
-                            </div>
-                            <div class="modal-body m-0">
-                                    <partial name="_AccommodationDetail" model="accommodation"/>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Zatvori</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                }
-            </div>
-        </div>
+        <partial name="_AccommodationList" model="Model"/>
     </form>
 </div>
+
+@section scripts{
+<script>
+    function fnLoadAccommodationList() { 
+        var objData = {
+            checkInDate: $("#CheckInDate").val(),
+            nights: $("#Nights").val()
+        };
+
+        $.ajax({
+            url: "@Url.Action("GetAccommodationsByDate", "Home")",
+            data: objData,
+            type: "POST",
+            success: function (data) {
+                $("#AccommodationsList").empty();
+                $("#AccommodationsList").html(data);
+            }
+        });
+    }
+</script>
+}
