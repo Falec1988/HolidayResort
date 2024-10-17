@@ -26,21 +26,6 @@ namespace HolidayResort.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(HomeVM homeVM)
-        {
-            homeVM.AccommodationList = _unitOfWork.Accommodation.GetAll(includeProperties: "AccommodationEquipment");
-
-            foreach (var accommodation in homeVM.AccommodationList)
-            {
-                if (accommodation.Id % 2 == 0)
-                {
-                    accommodation.IsAvailable = false;
-                }
-            }
-
-            return View(homeVM);
-        }
-
         public IActionResult GetAccommodationsByDate(int nights, DateOnly checkInDate)
         {
             var accommodationList = _unitOfWork.Accommodation.GetAll(includeProperties: "AccommodationEquipment").ToList();
