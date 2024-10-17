@@ -11,6 +11,8 @@ public class UnitOfWork : IUnitOfWork
 
     public IAccommodationNumberRepository AccommodationNumber { get; private set; }
 
+    public IApplicationUserRepository User { get; private set; }
+
     public IEquipmentRepository Equipment { get; private set; }
 
     public IBookingRepository Booking { get; private set; }
@@ -22,6 +24,7 @@ public class UnitOfWork : IUnitOfWork
         AccommodationNumber = new AccommodationNumberRepository(_context);
         Equipment = new EquipmentRepository(_context);
         Booking = new BookingRepository(_context);
+        User = new ApplicationUserRepository(_context);
     }
 
     public void Save()

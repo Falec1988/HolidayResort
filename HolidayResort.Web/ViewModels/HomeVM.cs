@@ -1,4 +1,5 @@
 ﻿using HolidayResort.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace HolidayResort.Web.ViewModels;
 

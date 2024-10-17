@@ -6,6 +6,8 @@ public interface IUnitOfWork
 
     IAccommodationNumberRepository AccommodationNumber { get; }
 
+    IApplicationUserRepository User { get; }
+
     IBookingRepository Booking { get; }
 
     IEquipmentRepository Equipment { get; }
