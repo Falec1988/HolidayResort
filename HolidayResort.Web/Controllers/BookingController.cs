@@ -109,7 +109,7 @@ public class BookingController : Controller
 
             if (session.PaymentStatus == "paid")
             {
-                _unitOfWork.Booking.UpdateStatus(bookingFromDb.Id, SD.StatusApproved);
+                _unitOfWork.Booking.UpdateStatus(bookingFromDb.Id, SD.StatusApproved,0);
                 _unitOfWork.Booking.UpdateStripePaymentID(bookingFromDb.Id, session.Id, session.PaymentIntentId);
                 _unitOfWork.Save();
             }
@@ -118,10 +118,47 @@ public class BookingController : Controller
         return View(bookingId);
     }
 
+    [Authorize]
+    public IActionResult BookingDetails(int bookingId)
+    {
+        Booking bookingFromDb = _unitOfWork.Booking.Get(x => x.Id == bookingId,
+            includeProperties: "User,Accommodation");
+
+        if (bookingFromDb.AccommodationNo == 0 && bookingFromDb.Status == SD.StatusApproved)
+        {
+            var availableAccommodationNumber = AssignAvailableAccommodationNoByAccommodation(bookingFromDb.AccommodationId);
+
+            bookingFromDb.AccommodationNumber = _unitOfWork.AccommodationNumber.GetAll(x => x.AccommodationId == bookingFromDb.AccommodationId
+            && availableAccommodationNumber.Any(a => a == x.AccommodationNo)).ToList();
+        }
+
+        return View(bookingFromDb);
+    }
+
+    private List<int> AssignAvailableAccommodationNoByAccommodation(int accommodationId)
+    {
+        List<int> availableAccommodationNumbers = new();
+
+        var accommodationNumbers = _unitOfWork.AccommodationNumber.GetAll(x => x.AccommodationId == accommodationId);
+
+        var checkedInAccommodation = _unitOfWork.Booking.GetAll(x => x.AccommodationId == accommodationId && x.Status == SD.StatusCheckedIn)
+            .Select(x => x.AccommodationNo);
+
+        foreach (var accommodationNo in accommodationNumbers)
+        {
+            if (!checkedInAccommodation.Contains(accommodationNo.AccommodationNo))
+            {
+                availableAccommodationNumbers.Add(accommodationNo.AccommodationNo);
+            }
+        }
+
+        return availableAccommodationNumbers;
+    }
+
     #region API Calls
     [HttpGet]
     [Authorize]
-    public IActionResult GetAll()
+    public IActionResult GetAll(string status)
     {
         IEnumerable<Booking> objBookings;
         if (User.IsInRole(SD.Role_Admin))
@@ -136,8 +173,11 @@ public class BookingController : Controller
             objBookings = _unitOfWork.Booking
                 .GetAll(x => x.UserId == userId, includeProperties: "User,Accommodation");
         }
+        if (!string.IsNullOrEmpty(status))
+        {
+            objBookings = objBookings.Where(x => x.Status.ToLower().Equals(status.ToLower()));
+        }
 
-        objBookings = _unitOfWork.Booking.GetAll(includeProperties: "User,Accommodation");
         return Json(new { data = objBookings });
     }
     #endregion

@@ -33,16 +33,16 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" asp-controller="Accommodation" asp-action="Index">Smještaj</a>
+                                    <a class="dropdown-item" asp-controller="Accommodation" asp-action="Index">Smještaji</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" asp-controller="AccommodationNumber" asp-action="Index">Broj smještaja</a>
+                                    <a class="dropdown-item" asp-controller="AccommodationNumber" asp-action="Index">Brojevi smještaja</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" asp-controller="Equipment" asp-action="Index">Oprema</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" asp-controller="Booking" asp-action="Index">Rezervacija</a>
+                                    <a class="dropdown-item" asp-controller="Booking" asp-action="Index" asp-route-status="@SD.StatusApproved">Rezervacije</a>
                                 </li>
                             </ul>
                         </li>
