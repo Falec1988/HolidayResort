@@ -18,6 +18,12 @@ public class BookingController : Controller
     }
 
     [Authorize]
+    public IActionResult Index()
+    {
+        return View();
+    }
+
+    [Authorize]
     public IActionResult FinalizeBooking(int accommodationId, DateOnly checkInDate, int nights)
     {
         var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -94,7 +100,7 @@ public class BookingController : Controller
     [Authorize]
     public IActionResult BookingConfirmation(int bookingId)
     {
-        Booking bookingFromDb = _unitOfWork.Booking.Get(x => x.Id == bookingId, includeProperties:"User,Accommodation");
+        Booking bookingFromDb = _unitOfWork.Booking.Get(x => x.Id == bookingId, includeProperties: "User,Accommodation");
 
         if (bookingFromDb.Status == SD.StatusPending)
         {
@@ -104,11 +110,35 @@ public class BookingController : Controller
             if (session.PaymentStatus == "paid")
             {
                 _unitOfWork.Booking.UpdateStatus(bookingFromDb.Id, SD.StatusApproved);
-                _unitOfWork.Booking.UpdateStripePaymentID(bookingFromDb.Id,session.Id,session.PaymentIntentId);
+                _unitOfWork.Booking.UpdateStripePaymentID(bookingFromDb.Id, session.Id, session.PaymentIntentId);
                 _unitOfWork.Save();
             }
         }
 
         return View(bookingId);
     }
+
+    #region API Calls
+    [HttpGet]
+    [Authorize]
+    public IActionResult GetAll()
+    {
+        IEnumerable<Booking> objBookings;
+        if (User.IsInRole(SD.Role_Admin))
+        {
+            objBookings = _unitOfWork.Booking.GetAll(includeProperties: "User,Accommodation");
+        }
+        else
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            objBookings = _unitOfWork.Booking
+                .GetAll(x => x.UserId == userId, includeProperties: "User,Accommodation");
+        }
+
+        objBookings = _unitOfWork.Booking.GetAll(includeProperties: "User,Accommodation");
+        return Json(new { data = objBookings });
+    }
+    #endregion
 }
