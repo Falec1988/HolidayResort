@@ -59,6 +59,26 @@ public class BookingController : Controller
         booking.Status = SD.StatusPending;
         booking.BookingDate = DateTime.Now;
 
+        var accommodationNoList = _unitOfWork.AccommodationNumber.GetAll().ToList();
+
+        var bookedAccommodation = _unitOfWork.Booking.GetAll(x => x.Status == SD.StatusApproved ||
+        x.Status == SD.StatusCheckedIn).ToList();
+
+        int roomAvailable = SD.AccommodationRoomsAvailableCount
+                (accommodation.Id, accommodationNoList, booking.CheckInDate, booking.Nights, bookedAccommodation);
+
+        if (roomAvailable == 0)
+        {
+            TempData["error"] = "Rasprodano!";
+
+            return RedirectToAction(nameof(FinalizeBooking), new
+            {
+                accommodationId = booking.AccommodationId,
+                checkInDate = booking.CheckInDate,
+                nights = booking.Nights
+            });
+        };
+
         _unitOfWork.Booking.Add(booking);
         _unitOfWork.Save();
 
@@ -109,7 +129,7 @@ public class BookingController : Controller
 
             if (session.PaymentStatus == "paid")
             {
-                _unitOfWork.Booking.UpdateStatus(bookingFromDb.Id, SD.StatusApproved,0);
+                _unitOfWork.Booking.UpdateStatus(bookingFromDb.Id, SD.StatusApproved, 0);
                 _unitOfWork.Booking.UpdateStripePaymentID(bookingFromDb.Id, session.Id, session.PaymentIntentId);
                 _unitOfWork.Save();
             }
@@ -133,6 +153,36 @@ public class BookingController : Controller
         }
 
         return View(bookingFromDb);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = SD.Role_Admin)]
+    public IActionResult CheckIn(Booking booking)
+    {
+        _unitOfWork.Booking.UpdateStatus(booking.Id, SD.StatusCheckedIn, booking.AccommodationNo);
+        _unitOfWork.Save();
+        TempData["Success"] = "Status rezervacije promijenjen.";
+        return RedirectToAction(nameof(BookingDetails), new { bookingId = booking.Id });
+    }
+
+    [HttpPost]
+    [Authorize(Roles = SD.Role_Admin)]
+    public IActionResult CheckOut(Booking booking)
+    {
+        _unitOfWork.Booking.UpdateStatus(booking.Id, SD.StatusCompleted, booking.AccommodationNo);
+        _unitOfWork.Save();
+        TempData["Success"] = "Rezervacija završena.";
+        return RedirectToAction(nameof(BookingDetails), new { bookingId = booking.Id });
+    }
+
+    [HttpPost]
+    [Authorize(Roles = SD.Role_Admin)]
+    public IActionResult CancelBooking(Booking booking)
+    {
+        _unitOfWork.Booking.UpdateStatus(booking.Id, SD.StatusCancelled, 0);
+        _unitOfWork.Save();
+        TempData["Success"] = "Rezervacija otkazana.";
+        return RedirectToAction(nameof(BookingDetails), new { bookingId = booking.Id });
     }
 
     private List<int> AssignAvailableAccommodationNoByAccommodation(int accommodationId)
