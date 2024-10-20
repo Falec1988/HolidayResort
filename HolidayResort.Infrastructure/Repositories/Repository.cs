@@ -2,6 +2,7 @@
 using HolidayResort.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Security.Cryptography;
 
 namespace HolidayResort.Infrastructure.Repositories;
 
@@ -27,9 +28,18 @@ public class Repository<T> : IRepository<T> where T : class
         return dbSet.Any(filter);
     }
 
-    public T Get(Expression<Func<T, bool>>? filter, string? includeProperties = null)
+    public T Get(Expression<Func<T, bool>>? filter, string? includeProperties = null, bool tracked = false)
     {
-        IQueryable<T> query = dbSet;
+        IQueryable<T> query;
+
+        if (tracked)
+        {
+            query = dbSet;
+        }
+        else
+        {
+            query = dbSet.AsNoTracking();
+        }
 
         if (filter is not null)
         {
@@ -46,9 +56,18 @@ public class Repository<T> : IRepository<T> where T : class
         return query.FirstOrDefault();
     }
 
-    public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+    public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null, bool tracked = false)
     {
-        IQueryable<T> query = dbSet;
+        IQueryable<T> query;
+
+        if (tracked)
+        {
+            query = dbSet;
+        }
+        else
+        {
+            query = dbSet.AsNoTracking();
+        }
 
         if (filter is not null)
         {
