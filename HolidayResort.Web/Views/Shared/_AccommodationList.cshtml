@@ -49,7 +49,7 @@
                         </div>
                         <div class="col-4">
                             <span class="">Kapacitet : @accommodation.Capacity</span><br />
-                            <span class=" pt-1">Kvadratura : @accommodation.SquareMeter m²</span><br />
+                            <span class=" pt-1">Kvadratura : @accommodation.SquareMeter m2</span><br />
                         </div>
                         <div class="col-4">
                             <span class="text-warning float-end font-weight-bold pt-1" style="font-size:25px;">
@@ -74,6 +74,10 @@
                         <partial name="_AccommodationDetail" model="accommodation" />
                     </div>
                     <div class="modal-footer">
+                            <button asp-controller="Home" asp-action="GeneratePPTExport"
+                                asp-route-id="@accommodation.Id" type="submit" class="btn btn-outline-warning">
+                                <i class="bi bi-file-earmark-ppt"></i> Detalji smještaja.pptx
+                            </button>
                         <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Zatvori</button>
                     </div>
                 </div>

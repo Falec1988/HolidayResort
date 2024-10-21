@@ -8,6 +8,7 @@ using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
 using Syncfusion.Drawing;
+using Syncfusion.Pdf;
 using System.Globalization;
 using System.Security.Claims;
 
@@ -165,14 +166,14 @@ public class BookingController : Controller
 
     [HttpPost]
     [Authorize]
-    public IActionResult GenerateInvoice(int id)
+    public IActionResult GenerateInvoice(int id, string downloadType)
     {
         string basePath = _webHostEnvironment.WebRootPath;
 
         WordDocument document = new WordDocument();
 
         // Otvaranje dokumenta
-        string dataPath = basePath + @"/exports/BookingDetails.docx";
+        string dataPath = basePath + @"/exports/DetaljiRezervacije.docx";
 
         using FileStream fileStream = new(dataPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
@@ -226,7 +227,8 @@ public class BookingController : Controller
         table.TableFormat.Paddings.Bottom = 7f;
         table.TableFormat.Borders.Horizontal.LineWidth = 1f;
 
-        table.ResetCells(2, 4);
+        int rows = bookingFromDb.AccommodationNo > 0 ? 3 : 2;
+        table.ResetCells(rows, 4);
 
         WTableRow row0 = table.Rows[0];
 
@@ -247,6 +249,16 @@ public class BookingController : Controller
         row1.Cells[2].AddParagraph().AppendText((bookingFromDb.TotalCost / bookingFromDb.Nights).ToString("C", CultureInfo.CreateSpecificCulture("fr-FR")));
         row1.Cells[3].AddParagraph().AppendText(bookingFromDb.TotalCost.ToString("C", CultureInfo.CreateSpecificCulture("fr-FR")));
         row1.Cells[3].Width = 120;
+
+        if (bookingFromDb.AccommodationNo > 0)
+        {
+            WTableRow row2 = table.Rows[2];
+
+            row2.Cells[0].Width = 80;
+            row2.Cells[1].AddParagraph().AppendText("Broj smještaja - " + bookingFromDb.AccommodationNo.ToString());
+            row2.Cells[1].Width = 180;
+            row2.Cells[3].Width = 120;
+        }
 
         WTableStyle tableStyle = document.AddTableStyle("CustomStyle") as WTableStyle;
         tableStyle.TableProperties.RowStripe = 1;
@@ -271,10 +283,22 @@ public class BookingController : Controller
         using DocIORenderer renderer = new();
 
         MemoryStream stream = new();
-        document.Save(stream, FormatType.Docx);
-        stream.Position = 0;
 
-        return File(stream, "application/docx", "BookingDetails.docx");
+        if (downloadType == "word")
+        {
+            document.Save(stream, FormatType.Docx);
+            stream.Position = 0;
+
+            return File(stream, "application/docx", "DetaljiRezervacije.docx");
+        }
+        else
+        {
+            PdfDocument pdfDocument = renderer.ConvertToPDF(document);
+            pdfDocument.Save(stream);
+            stream.Position = 0;
+
+            return File(stream, "application/pdf", "DetaljiRezervacije.pdf");
+        }
     }
 
     [HttpPost]
