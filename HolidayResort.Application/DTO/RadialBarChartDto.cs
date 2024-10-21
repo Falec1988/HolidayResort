@@ -1,6 +1,6 @@
 ﻿namespace HolidayResort.Web.ViewModels;
 
-public class RadialBarChartVM
+public class RadialBarChartDto
 {
     public decimal TotalCount { get; set; }
 

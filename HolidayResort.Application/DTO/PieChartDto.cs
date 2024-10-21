@@ -1,6 +1,6 @@
 ﻿namespace HolidayResort.Web.ViewModels;
 
-public class PieChartVM
+public class PieChartDto
 {
     public decimal[] Series { get; set; }
 

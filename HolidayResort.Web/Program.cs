@@ -1,4 +1,6 @@
 using HolidayResort.Application.Interfaces;
+using HolidayResort.Application.Services.Implementation;
+using HolidayResort.Application.Services.Interface;
 using HolidayResort.Domain.Entities;
 using HolidayResort.Infrastructure.Data;
 using HolidayResort.Infrastructure.Repositories;
@@ -26,6 +28,7 @@ builder.Services.ConfigureApplicationCookie(option =>
 });
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 var app = builder.Build();
 
