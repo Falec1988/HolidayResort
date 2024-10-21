@@ -29,6 +29,8 @@ builder.Services.ConfigureApplicationCookie(option =>
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IAccommodationService, AccommodationService>();
+builder.Services.AddScoped<IAccommodationNumberService, AccommodationNumberService>();
 
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 

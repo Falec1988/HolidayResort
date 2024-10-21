@@ -1,5 +1,4 @@
-using HolidayResort.Application.Interfaces;
-using HolidayResort.Application.Utility;
+using HolidayResort.Application.Services.Interface;
 using HolidayResort.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Syncfusion.Presentation;
@@ -9,13 +8,13 @@ namespace HolidayResort.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IAccommodationService _accommodationService;
 
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
+        public HomeController(IAccommodationService accommodationService, IWebHostEnvironment webHostEnvironment)
         {
-            _unitOfWork = unitOfWork;
+            _accommodationService = accommodationService;
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -23,7 +22,7 @@ namespace HolidayResort.Web.Controllers
         {
             HomeVM homeVM = new()
             {
-                AccommodationList = _unitOfWork.Accommodation.GetAll(includeProperties: "AccommodationEquipment"),
+                AccommodationList = _accommodationService.GetAllAccommodations(),
                 Nights = 1,
                 CheckInDate = DateOnly.FromDateTime(DateTime.Now)
             };
@@ -34,25 +33,11 @@ namespace HolidayResort.Web.Controllers
         [HttpPost]
         public IActionResult GetAccommodationsByDate(int nights, DateOnly checkInDate)
         {
-            var accommodationList = _unitOfWork.Accommodation.GetAll(includeProperties: "AccommodationEquipment").ToList();
-
-            var accommodationNoList = _unitOfWork.AccommodationNumber.GetAll().ToList();
             
-            var bookedAccommodation = _unitOfWork.Booking.GetAll(x => x.Status == SD.StatusApproved ||
-            x.Status == SD.StatusCheckedIn).ToList();
-
-
-            foreach (var accommodation in accommodationList)
-            {
-                int roomAvailable = SD.AccommodationRoomsAvailableCount
-                    (accommodation.Id, accommodationNoList, checkInDate, nights, bookedAccommodation);
-
-                accommodation.IsAvailable = roomAvailable > 0 ? true : false;
-            }
             HomeVM homeVM = new()
             {
                 CheckInDate = checkInDate,
-                AccommodationList = accommodationList,
+                AccommodationList = _accommodationService.GetAccommodationsAvailabilityByDate(nights, checkInDate),
                 Nights = nights
             };
 
@@ -62,7 +47,7 @@ namespace HolidayResort.Web.Controllers
         [HttpPost]
         public IActionResult GeneratePPTExport(int id)
         {
-            var accommodation = _unitOfWork.Accommodation.GetAll(includeProperties: "AccommodationEquipment").FirstOrDefault(x => x.Id == id);
+            var accommodation = _accommodationService.GetAccommodationById(id);
             
             if (accommodation is null)
             {
