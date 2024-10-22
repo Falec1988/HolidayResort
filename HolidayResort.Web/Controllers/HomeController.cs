@@ -26,7 +26,6 @@ namespace HolidayResort.Web.Controllers
                 Nights = 1,
                 CheckInDate = DateOnly.FromDateTime(DateTime.Now)
             };
-
             return View(homeVM);
         }
 
@@ -40,7 +39,6 @@ namespace HolidayResort.Web.Controllers
                 AccommodationList = _accommodationService.GetAccommodationsAvailabilityByDate(nights, checkInDate),
                 Nights = nights
             };
-
             return PartialView("_AccommodationList", homeVM);
         }
 

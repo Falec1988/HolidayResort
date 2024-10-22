@@ -1,4 +1,4 @@
-﻿using HolidayResort.Application.Interfaces;
+﻿using HolidayResort.Application.Services.Interface;
 using HolidayResort.Application.Utility;
 using HolidayResort.Domain.Entities;
 using HolidayResort.Web.ViewModels;
@@ -11,48 +11,49 @@ namespace HolidayResort.Web.Controllers;
 [Authorize(Roles = SD.Role_Admin)]
 public class EquipmentController : Controller
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IAccommodationService _accommodationService;
 
-    public EquipmentController(IUnitOfWork unitOfWork)
+    private readonly IEquipmentService _equipmentService;
+
+    public EquipmentController(IAccommodationService accommodationService, IEquipmentService equipmentService)
     {
-        _unitOfWork = unitOfWork;
+        _accommodationService = accommodationService;
+        _equipmentService = equipmentService;
     }
 
     public IActionResult Index()
     {
-        var equipments = _unitOfWork.Equipment.GetAll(includeProperties: "Accommodation");
-        return View(equipments);
+        var equipment = _equipmentService.GetAllEquipments();
+        return View(equipment);
     }
 
     public IActionResult Create()
     {
         EquipmentVM equipmentVM = new()
         {
-            AccommodationList = _unitOfWork.Accommodation.GetAll().Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Id.ToString()
-            })
-        };
+            AccommodationList = _accommodationService.GetAllAccommodations().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                })
+            };
         return View(equipmentVM);
     }
 
     [HttpPost]
     public IActionResult Create(EquipmentVM obj)
     {
-
         if (ModelState.IsValid)
         {
-            _unitOfWork.Equipment.Add(obj.Equipment);
-            _unitOfWork.Save();
+            _equipmentService.CreateEquipment(obj.Equipment);
             TempData["success"] = "Oprema je uspješno kreirana.";
             return RedirectToAction(nameof(Index));
         }
         
-        obj.AccommodationList = _unitOfWork.Accommodation.GetAll().Select(x => new SelectListItem
+        obj.AccommodationList = _accommodationService.GetAllAccommodations().Select(u => new SelectListItem
         {
-            Text = x.Name,
-            Value = x.Id.ToString()
+            Text = u.Name,
+            Value = u.Id.ToString()
         });
         return View(obj);
     }
@@ -61,14 +62,16 @@ public class EquipmentController : Controller
     {
         EquipmentVM equipmentVM = new()
         {
-            AccommodationList = _unitOfWork.Accommodation.GetAll().Select(x => new SelectListItem
+            AccommodationList = _accommodationService.GetAllAccommodations().Select(u => new SelectListItem
             {
-                Text = x.Name,
-                Value = x.Id.ToString()
+                Text = u.Name,
+                Value = u.Id.ToString()
             }),
-            Equipment = _unitOfWork.Equipment.Get(x => x.Id == equipmentId)
+            
+            Equipment = _equipmentService.GetEquipmentById(equipmentId)
         };
-        if (equipmentVM.Equipment is null)
+
+        if (equipmentVM.Equipment == null)
         {
             return RedirectToAction("Error", "Home");
         }
@@ -80,15 +83,15 @@ public class EquipmentController : Controller
     {
         if (ModelState.IsValid)
         {
-            _unitOfWork.Equipment.Update(equipmentVM.Equipment);
-            _unitOfWork.Save();
+            _equipmentService.UpdateEquipment(equipmentVM.Equipment);
             TempData["success"] = "Oprema je uspješno uređena.";
             return RedirectToAction(nameof(Index));
         }
-        equipmentVM.AccommodationList = _unitOfWork.Accommodation.GetAll().Select(x => new SelectListItem
+
+        equipmentVM.AccommodationList = _accommodationService.GetAllAccommodations().Select(u => new SelectListItem
         {
-            Text = x.Name,
-            Value = x.Id.ToString()
+            Text = u.Name,
+            Value = u.Id.ToString()
         });
         return View(equipmentVM);
     }
@@ -97,14 +100,16 @@ public class EquipmentController : Controller
     {
         EquipmentVM equipmentVM = new()
         {
-            AccommodationList = _unitOfWork.Accommodation.GetAll().Select(x => new SelectListItem
+            AccommodationList = _accommodationService.GetAllAccommodations().Select(u => new SelectListItem
             {
-                Text = x.Name,
-                Value = x.Id.ToString()
+                Text = u.Name,
+                Value = u.Id.ToString()
             }),
-            Equipment = _unitOfWork.Equipment.Get(x => x.Id == equipmentId)
-        };
-        if (equipmentVM.Equipment is null)
+             
+            Equipment = _equipmentService.GetEquipmentById(equipmentId)
+            };
+
+        if (equipmentVM.Equipment == null)
         {
             return RedirectToAction("Error", "Home");
         }
@@ -114,17 +119,15 @@ public class EquipmentController : Controller
     [HttpPost]
     public IActionResult Delete(EquipmentVM equipmentVM)
     {
-        Equipment? objFromDb = _unitOfWork.Equipment
-            .Get(x => x.Id == equipmentVM.Equipment.Id);
-
+        Equipment? objFromDb = _equipmentService.GetEquipmentById(equipmentVM.Equipment.Id);
         if (objFromDb is not null)
         {
-            _unitOfWork.Equipment.Remove(objFromDb);
-            _unitOfWork.Save();
-            TempData["success"] = "Oprema je uspješno izbrisana.";
+            _equipmentService.DeleteEquipment(objFromDb.Id);
+            TempData["success"] = "Oprema uspješno obrisana.";
             return RedirectToAction(nameof(Index));
         }
         TempData["error"] = "Opremu nije moguće izbrisati.";
+
         return View();
     }
 }

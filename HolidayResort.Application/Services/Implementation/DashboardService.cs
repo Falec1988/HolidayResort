@@ -8,11 +8,8 @@ namespace HolidayResort.Application.Services.Implementation;
 public class DashboardService : IDashboardService
 {
     private readonly IUnitOfWork _unitOfWork;
-
     static int previousMonth = DateTime.Now.Month == 1 ? 12 : DateTime.Now.Month - 1;
-
     readonly DateTime previousMonthStartDate = new(DateTime.Now.Year, previousMonth - 1, 1);
-
     readonly DateTime currentMonthStartDate = new(DateTime.Now.Year, DateTime.Now.Month, 1);
 
     public DashboardService(IUnitOfWork unitOfWork)
@@ -36,7 +33,6 @@ public class DashboardService : IDashboardService
             Labels = new string[] { "Rezervacije novih korisnika", "Rezervacije starih korisnika" },
             Series = new decimal[] { bookingsByNewCustomer, bookingsByReturningCustomer }
         };
-
         return PieChartDto;
     }
 
@@ -101,7 +97,6 @@ public class DashboardService : IDashboardService
             Categories = categories,
             Series = chartDataList
         };
-
         return LineChartDto;
     }
 

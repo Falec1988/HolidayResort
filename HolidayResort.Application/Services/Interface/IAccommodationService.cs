@@ -15,4 +15,6 @@ public interface IAccommodationService
     bool DeleteAccommodation(int id);
 
     IEnumerable<Accommodation> GetAccommodationsAvailabilityByDate(int nights, DateOnly checkInDate);
+
+    bool IsAccommodationAvailableByDate(int accommodationId, int nights, DateOnly checkInDate);
 }

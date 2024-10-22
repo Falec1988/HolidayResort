@@ -10,9 +10,7 @@ namespace HolidayResort.Web.Controllers;
 public class AccountController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
-
     private readonly SignInManager<ApplicationUser> _signInManager;
-
     private readonly RoleManager<IdentityRole> _roleManager;
 
     public AccountController(
@@ -33,7 +31,6 @@ public class AccountController : Controller
         {
             RedirectUrl = returnUrl
         };
-
         return View(loginVM);
     }
 
@@ -70,7 +67,6 @@ public class AccountController : Controller
                 ModelState.AddModelError("", "Invalid login attempt.");
             }
         }
-
         return View(loginVM);
     }
 
@@ -87,7 +83,6 @@ public class AccountController : Controller
             }),
             RedirectUrl = returnUrl
         };
-
         return View(registerVM);
     }
 
@@ -142,7 +137,6 @@ public class AccountController : Controller
             Text = x.Name,
             Value = x.Name
         });
-
         return View(registerVM);
     }
 

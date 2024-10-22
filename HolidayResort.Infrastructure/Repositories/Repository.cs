@@ -2,14 +2,12 @@
 using HolidayResort.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Security.Cryptography;
 
 namespace HolidayResort.Infrastructure.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
 {
     private readonly ApplicationDbContext _context;
-
     internal DbSet<T> dbSet;
 
     public Repository(ApplicationDbContext context)
@@ -50,7 +48,7 @@ public class Repository<T> : IRepository<T> where T : class
             foreach (var includeProp in includeProperties
                 .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                query = query.Include(includeProp);
+                query = query.Include(includeProp.Trim());
             }
         }
         return query.FirstOrDefault();
@@ -78,7 +76,7 @@ public class Repository<T> : IRepository<T> where T : class
             foreach (var includeProp in includeProperties
                 .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                query = query.Include(includeProp);
+                query = query.Include(includeProp.Trim());
             }
         }
         return query.ToList();

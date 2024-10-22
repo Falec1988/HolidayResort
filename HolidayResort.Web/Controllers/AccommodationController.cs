@@ -88,7 +88,6 @@ public class AccommodationController : Controller
         {
             TempData["error"] = "Smještaj nije moguće izbrisati.";
         }
-
         return View();
     }
 }

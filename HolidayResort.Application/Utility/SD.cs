@@ -52,7 +52,6 @@ public static class SD
                 }
             }
         }
-
         return finalAvailableRoomForAllNights;
     }
 

@@ -12,5 +12,4 @@ public class ApplicationUserRepository : Repository<ApplicationUser>, IApplicati
     {
         _context = context;
     }
-
 }

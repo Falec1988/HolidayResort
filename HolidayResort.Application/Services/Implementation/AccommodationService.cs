@@ -9,7 +9,6 @@ namespace HolidayResort.Application.Services.Implementation;
 public class AccommodationService : IAccommodationService
 {
     private readonly IUnitOfWork _unitOfWork;
-
     private readonly IWebHostEnvironment _webHostEnvironment;
 
     public AccommodationService(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
@@ -88,13 +87,25 @@ public class AccommodationService : IAccommodationService
 
             accommodation.IsAvailable = roomAvailable > 0 ? true : false;
         }
-
         return accommodationList;
     }
 
     public IEnumerable<Accommodation> GetAllAccommodations()
     {
         return _unitOfWork.Accommodation.GetAll(includeProperties: "AccommodationEquipment");
+    }
+
+    public bool IsAccommodationAvailableByDate(int accommodationId, int nights, DateOnly checkInDate)
+    {
+        var accommodationNoList = _unitOfWork.AccommodationNumber.GetAll().ToList();
+
+        var bookedAccommodation = _unitOfWork.Booking.GetAll(x => x.Status == SD.StatusApproved ||
+        x.Status == SD.StatusCheckedIn).ToList();
+
+        int roomAvailable = SD.AccommodationRoomsAvailableCount
+                (accommodationId, accommodationNoList, checkInDate, nights, bookedAccommodation);
+
+        return roomAvailable > 0;
     }
 
     public void UpdateAccommodation(Accommodation accommodation)
@@ -113,13 +124,11 @@ public class AccommodationService : IAccommodationService
                     System.IO.File.Delete(oldImagePath);
                 }
             }
-
             using var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create);
             accommodation.Image.CopyTo(fileStream);
 
             accommodation.ImageUrl = @"\images\AccommodationImage\" + fileName;
         }
-
         _unitOfWork.Accommodation.Update(accommodation);
         _unitOfWork.Save();
     }

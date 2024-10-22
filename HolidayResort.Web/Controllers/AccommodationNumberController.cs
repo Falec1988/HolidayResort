@@ -9,7 +9,6 @@ namespace HolidayResort.Web.Controllers;
 public class AccommodationNumberController : Controller
 {
     private readonly IAccommodationService _accommodationService;
-
     private readonly IAccommodationNumberService _accommodationNumberService;
 
     public AccommodationNumberController(IAccommodationService accommodationService, IAccommodationNumberService accommodationNumberService)
